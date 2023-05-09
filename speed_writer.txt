@@ -1,0 +1,140 @@
+//This is the code for speed_writer.js
+var words = [
+    "once",
+    "upon",
+    "a",
+    "time",
+    "there",
+    "lived",
+    "a",
+    "ghost",
+    
+];
+var i = 0;
+//Targeting id from html
+var startGameButton = document.getElementById('button');
+var statContent = document.getElementById('stats');
+var input = document.getElementById('input');
+var mainContent = document.getElementById('main-content');
+var textDisplay = document.getElementById('text-display');
+var diffDisplay = document.getElementById('diff-display');
+var scoreDisplay = document.getElementById('score-display');
+var timeDisplay = document.getElementById('time-display');
+var form = document.getElementById('form');
+var bar = document.getElementById('difficulty');
+//creating a function called getWord
+function getWord() {
+    if (i < words.length) {
+        i++;
+        return words[i - 1];
+
+    } else {
+
+        var text = "<center><h1>COGRATULATION YOU SCORED " + state.score + " OUT OF 10 </h1></center> ";
+        var text1 = "<center><h1> YOUR TIME WAS " + state.timeElapsed + " SECONDS </h1></center> ";
+        var result = text.fontcolor("red");
+        var result1 = text1.fontcolor("red");
+        document.write(result);
+        document.write(result1);
+        window.setTimeout(function() { location.reload() }, 3000);
+    }
+}
+////creating a function called nextWord
+function nextWord() {
+    var word = getWord();
+    textDisplay.textContent = word;
+    state.currentWord = word;
+}
+//creating event listener
+startGameButton.addEventListener('click', function(event) {
+    bar.style.display = "none";
+
+    startGameButton.className = 'hide';
+
+    input.className = '';
+    input.focus();
+    nextWord();
+    statContent.className = '';
+    if (bar.value == 5) {
+        gameLength = 40;
+    } else if (bar.value == 6) {
+        gameLength = 35;
+    } else if (bar.value == 7) {
+        gameLength = 30;
+    } else if (bar.value == 8) {
+        gameLength = 25;
+    } else if (bar.value == 9) {
+        gameLength = 20;
+    } else {
+        gameLength = 15;
+    }
+    //calling a function startClock
+    startClock()
+
+});
+//declaring a object for current word,score and time
+var state = {
+    currentWord: '',
+    score: 0,
+    timeElapsed: 0,
+
+}
+
+
+//creating a function called renderStats
+function renderStats() {
+    timeDisplay.textContent = gameLength - state.timeElapsed;
+    scoreDisplay.textContent = state.score;
+    diffDisplay.textContent = bar.value;
+
+}
+
+
+//creating another event listener
+form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const userInput = input.value;
+
+
+
+    if (userInput === '') {
+        return;
+    }
+
+
+    var isCorrect = userInput === state.currentWord;
+
+
+    var span;
+    if (isCorrect) {
+
+
+        state.score += 1;
+        nextWord();
+    }
+
+
+
+    input.value = '';
+
+    renderStats();
+
+});
+
+
+//creating a function startClock
+function startClock() {
+    // add 1 sec per running sec
+    setInterval(function() {
+        state.timeElapsed += 1;
+        if (state.timeElapsed == gameLength) {
+            let text = "<center><h1>TIMES UP!!! YOUR GOT " + (i - 1) + " OUT OF 10  WORDS .TRY AGAIN </h1></center> ";
+            let result = text.fontcolor("red");
+            document.write(result);
+            window.setTimeout(function() { location.reload() }, 3000);
+
+        }
+        renderStats();
+    }, 1000);
+}
